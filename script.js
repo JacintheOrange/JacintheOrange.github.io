@@ -1,11 +1,18 @@
-// 添加数字动画
+// 统一的观察器选项
+const observerOptions = {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0.2
+};
+
+// 数字动画函数
 function animateNumbers() {
     const stats = document.querySelectorAll('.stat-number');
     
     stats.forEach(stat => {
         const target = parseInt(stat.getAttribute('data-target'));
-        const duration = 2000; // 动画持续2秒
-        const increment = target / (duration / 16); // 60fps
+        const duration = 2000;
+        const increment = target / (duration / 16);
         let current = 0;
         
         const updateNumber = () => {
@@ -22,19 +29,25 @@ function animateNumbers() {
     });
 }
 
-// 当元素进入视口时触发动画
-const observer = new IntersectionObserver((entries) => {
+// 创建一个统一的观察器
+const sectionObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            animateNumbers();
-            observer.unobserve(entry.target);
+            // 为数字动画的部分
+            if (entry.target.classList.contains('stats')) {
+                animateNumbers();
+            }
+            // 为所有部分添加可见性类
+            entry.target.classList.add('is-visible');
         }
     });
-});
+}, observerOptions);
 
-// 观察stats区域
-const statsSection = document.querySelector('.stats');
-observer.observe(statsSection);
+// 观察所有需要动画的区域
+document.addEventListener('DOMContentLoaded', function() {
+    const sections = document.querySelectorAll('.intro, .stats, .features, .service, .audience, .contact');
+    sections.forEach(section => sectionObserver.observe(section));
+});
 
 // 滚动显示动画
 function handleScrollAnimation() {
@@ -95,4 +108,4 @@ document.getElementById('contactForm')?.addEventListener('submit', function(e) {
     
     // 重置表单
     this.reset();
-}); 
+});

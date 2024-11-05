@@ -68,31 +68,95 @@ body {
 
 /* Hero 区域样式 */
 .hero {
-    height: calc(100vh - 70px);
-    margin-top: -70px;
-    padding-top: 70px;
+    height: 100vh;
     background-color: #D1D2D4;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden; /* 防止动画溢出 */
+}
+
+.hero-content {
     text-align: center;
     padding: 0 2rem;
 }
 
 .hero-content h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 3.5rem;
     color: var(--primary-blue);
+    margin-bottom: 2rem;
+    opacity: 0; /* 初始隐藏 */
+    animation: slideInLeft 1.5s ease forwards;
 }
 
 .hero-content p {
-    font-size: 1.2rem;
-    color: #666;
+    font-size: 2rem; /* 更大的字体 */
+    color: var(--primary-blue);
+    opacity: 0; /* 初始隐藏 */
+    animation: slideInRight 1.5s ease 0.5s forwards, 
+               wiggle 1s ease-in-out 2s;
+}
+
+/* 从左滑入动画 */
+@keyframes slideInLeft {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* 从右滑入动画 */
+@keyframes slideInRight {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* 晃动动画 */
+@keyframes wiggle {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(10px); }
+    75% { transform: translateX(-10px); }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-content p {
+        font-size: 1.5rem;
+    }
 }
 
 /* Intro 区域样式 */
 .intro {
     padding: 6rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.intro::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background-color: #87CEEB;
+    opacity: 0.1;
+    border-radius: 50%;
+    top: -150px;
+    left: -150px;
+    animation: float 15s infinite ease-in-out;
 }
 
 .intro-background {
@@ -263,22 +327,45 @@ body {
 .audience-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2.5rem;
+    gap: 2rem;
     margin-top: 3rem;
 }
 
 .audience-item {
-    background: #fff;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+}
+
+.audience-item::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #87CEEB, #FFA500);
+    z-index: -1;
+    border-radius: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .audience-item:hover {
     transform: translateY(-10px);
     border-color: var(--primary-gold);
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.audience-item:hover::before {
+    opacity: 1;
 }
 
 .audience-item img {
@@ -302,6 +389,17 @@ body {
     padding: 0 1.5rem 1.5rem;
     color: #666;
     line-height: 1.6;
+}
+
+.audience-content {
+    text-align: left;
+}
+
+.audience-content p {
+    color: var(--primary-blue);
+    font-size: 1.1rem;
+    line-height: 2;
+    margin: 0;
 }
 
 /* 响应式设计 */
@@ -334,83 +432,128 @@ body {
 
 /* Contact 区域样式 */
 .contact {
-    padding: 6rem 0;
+    padding: 4rem 0;
     background-color: #fff;
-    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact::before,
+.contact::after {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    opacity: 0.1;
+}
+
+.contact::before {
+    background-color: #87CEEB;
+    top: -100px;
+    left: -100px;
+    animation: float 25s infinite ease-in-out;
+}
+
+.contact::after {
+    background-color: #FFA500;
+    bottom: -100px;
+    right: -100px;
+    animation: float 20s infinite ease-in-out reverse;
 }
 
 .contact-wrapper {
     display: flex;
     justify-content: center;
-    margin-top: 3rem;
+    margin-top: 2rem;
 }
 
 .contact-info {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    max-width: 1000px;
     width: 100%;
+    max-width: 1000px;
+    display: flex;
+    justify-content: center;
+}
+
+.contact-row {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    width: 100%;
+    max-width: 900px;
+}
+
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 1rem;
+}
+
+.info-items {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-grow: 1;
 }
 
 .info-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 250px;
     text-align: center;
-    padding: 2rem;
+    padding: 1.5rem;
     background: #f8f9fa;
     border-radius: 10px;
     transition: all 0.3s ease;
 }
 
-.info-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    border-color: var(--primary-gold);
-}
-
-.info-item i {
-    font-size: 2rem;
-    color: var(--primary-blue);
-    margin-bottom: 1rem;
-}
-
-.social-links {
-    grid-column: 1 / -1;
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
 .social-link {
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--primary-blue);
-    color: var(--white);
+    color: white;
     border-radius: 50%;
-    transition: all 0.3s ease;
     font-size: 1.5rem;
+    transition: all 0.3s ease;
 }
 
-.social-link:hover {
-    transform: translateY(-3px);
-    background: var(--primary-gold);
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-    .contact-info {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
+/* 响应式调整 */
+@media (max-width: 1200px) {
+    .contact-row {
+        max-width: 800px;
     }
     
+    .info-item {
+        width: 220px;
+    }
+}
+
+@media (max-width: 992px) {
+    .contact-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
     .social-links {
-        margin-top: 1.5rem;
+        flex-direction: row;
+        padding-top: 0;
+    }
+
+    .info-items {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 768px) {
+    .info-items {
+        flex-direction: column;
+    }
+
+    .info-item {
+        width: 100%;
+        max-width: 300px;
     }
 }
 
@@ -685,6 +828,21 @@ textarea:focus {
 .features {
     padding: 6rem 0;
     background-color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+.features::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background-color: #FFA500;
+    opacity: 0.1;
+    border-radius: 50%;
+    bottom: -200px;
+    right: -200px;
+    animation: float 20s infinite ease-in-out reverse;
 }
 
 .features-container {
@@ -858,14 +1016,15 @@ textarea:focus {
 }
 
 .service-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 1.5rem;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
     margin-top: 2rem;
 }
 
 .service-item {
-    text-align: center;
+    flex: 0 0 auto;
 }
 
 .service-circle {
@@ -880,6 +1039,26 @@ textarea:focus {
     transition: all 0.3s ease;
     border: 2px solid var(--primary-blue);
     padding: 1rem;
+    transition: all 0.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.service-circle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #87CEEB, #FFA500);
+    opacity: 0;
+    transition: all 0.5s ease;
+    z-index: -1;
+}
+
+.service-circle:hover::before {
+    opacity: 0.1;
 }
 
 .service-circle p {
@@ -913,6 +1092,9 @@ textarea:focus {
 @media (max-width: 1400px) {
     .service-grid {
         grid-template-columns: repeat(3, 1fr);
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
@@ -932,4 +1114,534 @@ textarea:focus {
         width: 140px;
         height: 140px;
     }
+}
+
+/* Footer 样式更新 */
+.footer-social {
+    margin-top: 1.5rem;  /* 与联系信息保持适当距离 */
+    display: flex;
+    gap: 1rem;
+}
+
+.footer-social .social-link {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-blue);
+    color: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.footer-social .social-link:hover {
+    background: var(--primary-gold);
+    transform: translateY(-3px);
+}
+
+/* 调整 footer-contact 样式 */
+.footer-contact {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-contact p {
+    margin: 0.5rem 0;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .footer-social {
+        justify-content: center;
+        margin-top: 1rem;
+    }
+    
+    .footer-contact {
+        align-items: center;
+        text-align: center;
+    }
+}
+
+/* Audience 区域样式 */
+.audience-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.audience-item {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.audience-title {
+    color: var(--primary-blue);
+    font-size: 1.4rem;
+    height: 80px; /* 固定高度 */
+    display: flex;
+    align-items: flex-end; /* 文字底部对齐 */
+    position: relative;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+}
+
+/* 确保所有标题文字底部对齐 */
+.audience-title span {
+    display: block;
+    width: 100%;
+}
+
+/* 横线样式 */
+.audience-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--primary-gold);
+}
+
+.audience-content {
+    flex-grow: 1;
+}
+
+.audience-content p {
+    color: var(--text-light);
+    font-size: 1.1rem;
+    line-height: 2;
+    margin: 0;
+}
+
+/* 响应式调整 */
+@media (max-width: 992px) {
+    .audience-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .audience-title {
+        height: 70px;
+    }
+}
+
+@media (max-width: 768px) {
+    .audience-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .audience-title {
+        height: auto;
+        min-height: 60px;
+    }
+}
+
+/* 添加浮动背景元素 */
+.floating-bg {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.floating-bg.blue {
+    background-color: #87CEEB; /* 天蓝色 */
+}
+
+.floating-bg.orange {
+    background-color: #FFA500; /* 橙色 */
+}
+
+/* 为不同区域添加不同的浮动元素 */
+.intro {
+    position: relative;
+    overflow: hidden;
+}
+
+.intro::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background-color: #87CEEB;
+    opacity: 0.1;
+    border-radius: 50%;
+    top: -150px;
+    left: -150px;
+    animation: float 15s infinite ease-in-out;
+}
+
+.features {
+    position: relative;
+    overflow: hidden;
+}
+
+.features::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background-color: #FFA500;
+    opacity: 0.1;
+    border-radius: 50%;
+    bottom: -200px;
+    right: -200px;
+    animation: float 20s infinite ease-in-out reverse;
+}
+
+/* 浮动动画 */
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+        transform: translate(50px, 50px) rotate(90deg);
+    }
+    50% {
+        transform: translate(0, 100px) rotate(180deg);
+    }
+    75% {
+        transform: translate(-50px, 50px) rotate(270deg);
+    }
+}
+
+/* 为服务圆圈添加悬停效果 */
+.service-circle {
+    transition: all 0.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.service-circle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #87CEEB, #FFA500);
+    opacity: 0;
+    transition: all 0.5s ease;
+    z-index: -1;
+}
+
+.service-circle:hover::before {
+    opacity: 0.1;
+}
+
+/* 为 Audience 卡片添加渐变边框效果 */
+.audience-item {
+    position: relative;
+    background: white;
+    z-index: 1;
+}
+
+.audience-item::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #87CEEB, #FFA500);
+    z-index: -1;
+    border-radius: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.audience-item:hover::before {
+    opacity: 1;
+}
+
+/* 为 Contact 区域添加动态背景 */
+.contact {
+    position: relative;
+    overflow: hidden;
+}
+
+.contact::before,
+.contact::after {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    opacity: 0.1;
+}
+
+.contact::before {
+    background-color: #87CEEB;
+    top: -100px;
+    left: -100px;
+    animation: float 25s infinite ease-in-out;
+}
+
+.contact::after {
+    background-color: #FFA500;
+    bottom: -100px;
+    right: -100px;
+    animation: float 20s infinite ease-in-out reverse;
+}
+
+/* 浮动图标样式 */
+.floating-icons {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.icon-float {
+    position: absolute;
+    color: var(--primary-blue);
+    opacity: 0.1;
+    font-size: 2rem;
+    animation: iconFloat 20s infinite linear;
+}
+
+.icon-float:nth-child(1) {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.icon-float:nth-child(2) {
+    top: 60%;
+    right: 15%;
+    animation-delay: -5s;
+}
+
+.icon-float:nth-child(3) {
+    bottom: 30%;
+    left: 20%;
+    animation-delay: -10s;
+}
+
+.icon-float:nth-child(4) {
+    top: 40%;
+    right: 25%;
+    animation-delay: -15s;
+}
+
+/* 浮动动画 */
+@keyframes iconFloat {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+        transform: translate(100px, 50px) rotate(90deg);
+    }
+    50% {
+        transform: translate(50px, 100px) rotate(180deg);
+    }
+    75% {
+        transform: translate(-50px, 50px) rotate(270deg);
+    }
+    100% {
+        transform: translate(0, 0) rotate(360deg);
+    }
+}
+
+/* 装饰线条 */
+.stats-decoration {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.decoration-line {
+    position: absolute;
+    width: 150px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #87CEEB, transparent);
+    animation: lineScan 3s infinite linear;
+}
+
+@keyframes lineScan {
+    0% {
+        left: -150px;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* 脉冲和旋转图标 */
+.icon-pulse {
+    animation: pulse 2s infinite;
+    color: #87CEEB;
+    opacity: 0.3;
+    font-size: 3rem;
+}
+
+.icon-rotate {
+    animation: rotate 4s infinite linear;
+    color: #FFA500;
+    opacity: 0.3;
+    font-size: 2.5rem;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 添加医疗相关的小图标装饰 */
+.service::before {
+    content: '⚕';  /* 医疗符号 */
+    position: absolute;
+    font-size: 5rem;
+    color: #87CEEB;
+    opacity: 0.1;
+    top: 2rem;
+    left: 2rem;
+    animation: float 10s infinite ease-in-out;
+}
+
+.audience::after {
+    content: '🔬';  /* 显微镜emoji */
+    position: absolute;
+    font-size: 4rem;
+    opacity: 0.1;
+    bottom: 2rem;
+    right: 2rem;
+    animation: float 12s infinite ease-in-out reverse;
+}
+
+/* 浮动图标样式增强 */
+.floating-icons {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.icon-float {
+    position: absolute;
+    color: #87CEEB;  /* 使用天蓝色 */
+    opacity: 0.2;    /* 增加透明度 */
+    font-size: 2.5rem;  /* 增大图标 */
+}
+
+.icon-float:nth-child(1) { top: 20%; left: 10%; animation: iconFloat 15s infinite linear; }
+.icon-float:nth-child(2) { top: 60%; right: 15%; animation: iconFloat 20s infinite linear reverse; }
+.icon-float:nth-child(3) { bottom: 30%; left: 20%; animation: iconFloat 18s infinite linear; }
+.icon-float:nth-child(4) { top: 40%; right: 25%; animation: iconFloat 22s infinite linear reverse; }
+.icon-float:nth-child(5) { bottom: 40%; right: 10%; animation: iconFloat 19s infinite linear; }
+.icon-float:nth-child(6) { top: 30%; left: 30%; animation: iconFloat 21s infinite linear reverse; }
+
+/* Features 区域装饰增强 */
+.features {
+    position: relative;
+    overflow: hidden;
+}
+
+.features-decoration {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.features-decoration i {
+    position: absolute;
+    font-size: 3rem;
+}
+
+.icon-pulse {
+    top: 10%;
+    left: 5%;
+    color: #87CEEB;
+    opacity: 0.3;
+    animation: pulse 3s infinite;
+}
+
+.icon-rotate {
+    bottom: 10%;
+    right: 5%;
+    color: #FFA500;
+    opacity: 0.3;
+    animation: rotate 8s infinite linear;
+}
+
+/* 添加更多装饰元素 */
+.features::before {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border: 2px dashed #87CEEB;
+    border-radius: 50%;
+    top: -100px;
+    left: -100px;
+    opacity: 0.1;
+    animation: rotate 20s infinite linear;
+}
+
+.features::after {
+    content: '';
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border: 2px dashed #FFA500;
+    border-radius: 50%;
+    bottom: -75px;
+    right: -75px;
+    opacity: 0.1;
+    animation: rotate 15s infinite linear reverse;
+}
+
+/* 动画效果增强 */
+@keyframes iconFloat {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(20px, 20px) rotate(90deg); }
+    50% { transform: translate(0, 40px) rotate(180deg); }
+    75% { transform: translate(-20px, 20px) rotate(270deg); }
+    100% { transform: translate(0, 0) rotate(360deg); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.3); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 0.3; }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
