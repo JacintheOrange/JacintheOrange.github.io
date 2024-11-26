@@ -97,6 +97,42 @@ section:nth-child(even) {
     height: 60px;
 }
 
+/* Logo 样式 - 设置固定大小 */
+.logo {
+    height: 60px;  /* 设置固定高度 */
+    display: flex;
+    align-items: center;
+    position: relative;  /* 添加相对定位 */
+    z-index: 2;  /* 确保logo在最上层 */
+}
+
+.logo img {
+    height: 60px;  /* 设置固定高度 */
+    width: auto;
+    object-fit: contain;
+    transition: none;  /* 移除过渡效果 */
+}
+
+/* 移除所有会影响 logo 大小的样式 */
+.header.scrolled .logo,
+.header-scrolled .logo,
+.header.scrolled .logo img,
+.header-scrolled .logo img {
+    height: 60px;  /* 保持与原始高度一致 */
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .logo,
+    .logo img,
+    .header.scrolled .logo,
+    .header-scrolled .logo,
+    .header.scrolled .logo img,
+    .header-scrolled .logo img {
+        height: 50px;  /* 移动端稍微缩小一点，但保持固定 */
+    }
+}
+
 /* Logo 大小变化 */
 .logo img {
     height: 40px; /* 原始 logo 大小 */
@@ -1758,7 +1794,7 @@ p {
     cursor: pointer;
 }
 
-/* 背景图��伪元素 */
+/* 背景图伪元素 */
 .feature-item::before {
     content: '';
     position: absolute;
@@ -2387,7 +2423,7 @@ p {
 .feature-card h3,
 .feature-card p {
     color: #333;  /* 使用深色文字 */
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);  /* 添加文字���影提高可读性 */
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);  /* 添加文字影提高可读性 */
 }
 
 /* 标题文字 */
@@ -2445,4 +2481,33 @@ p {
 /* 添加微妙的文字阴影 */
 .contact-section h3 {
     text-shadow: 0 2px 4px rgba(242, 100, 33, 0.1);
+}
+
+/* Logo Section Styles */
+.logo-section {
+    background-color: #fff;
+    padding: 2rem 0;  /* 从 4rem 减少到 2rem */
+    text-align: center;
+}
+
+.footer-logo {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.footer-logo img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .logo-section {
+        padding: 1.5rem 0;  /* 从 3rem 减少到 1.5rem */
+    }
+    
+    .footer-logo {
+        max-width: 200px;
+    }
 }
