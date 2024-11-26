@@ -99,18 +99,18 @@ section:nth-child(even) {
 
 /* Logo 样式 - 设置固定大小 */
 .logo {
-    height: 60px;  /* 设置固定高度 */
+    height: 80px;  /* 增加高度以匹配header高度 */
     display: flex;
     align-items: center;
-    position: relative;  /* 添加相对定位 */
-    z-index: 2;  /* 确保logo在最上层 */
+    position: relative;
+    z-index: 2;
 }
 
 .logo img {
-    height: 60px;  /* 设置固定高度 */
+    height: 80px;  /* 增加logo图片高度 */
     width: auto;
     object-fit: contain;
-    transition: none;  /* 移除过渡效果 */
+    transition: none;
 }
 
 /* 移除所有会影响 logo 大小的样式 */
@@ -118,7 +118,7 @@ section:nth-child(even) {
 .header-scrolled .logo,
 .header.scrolled .logo img,
 .header-scrolled .logo img {
-    height: 60px;  /* 保持与原始高度一致 */
+    height: 70px;  /* 滚动时稍微缩小一点，但仍保持较大尺寸 */
 }
 
 /* 响应式调整 */
@@ -129,7 +129,7 @@ section:nth-child(even) {
     .header-scrolled .logo,
     .header.scrolled .logo img,
     .header-scrolled .logo img {
-        height: 50px;  /* 移动端稍微缩小一点，但保持固定 */
+        height: 60px;  /* 移动端时的大小 */
     }
 }
 
@@ -262,9 +262,11 @@ section:nth-child(even) {
     position: relative;
     height: 100vh;
     overflow: hidden;
-    perspective: 1000px;
-    transform-style: preserve-3d;
     background-color: rgba(255, 255, 255, 0.9) !important;
+    background-image: url('../image/hero-bg.jpg') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
 }
 
 .hero .container {
@@ -274,19 +276,6 @@ section:nth-child(even) {
     justify-content: center;
     position: relative;
     z-index: 3;
-}
-
-.hero-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('images/hero-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    transform: translateZ(-10px) scale(2);
-    z-index: 1;
 }
 
 .hero-overlay {
@@ -1023,7 +1012,7 @@ img.lazy.loaded {
     transition: all 0.3s ease;
 }
 
-/* 移动端菜单展时的样式 */
+/* 移动端单展时的样式 */
 .nav.active {
     transform: translateX(0);
 }
@@ -1071,18 +1060,27 @@ img.lazy.loaded {
 
 /* Footer Styles */
 .footer {
-    background-color: var(--primary-color);
+    background: var(--primary-color);
+    padding: 0;  /* 移除所有内边距 */
     color: #fff;
-    padding: 4rem 0 0;
     position: relative;
-    z-index: 1;
 }
 
+/* Footer 内容区域保持适当的内边距 */
 .footer-content {
     display: grid;
-    grid-template-columns: 1fr 2fr; /* 服务列表占1份，联系信息占2份 */
-    gap: 4rem;
-    padding: 3rem 0;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    padding: 1rem 0;  /* 保持内容区域的适当间距 */
+}
+
+/* 底部版权信息区域 */
+.footer-bottom {
+    position: relative;
+    text-align: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-top: 1rem;
 }
 
 /* 服务列表样式 */
@@ -1143,7 +1141,7 @@ img.lazy.loaded {
     transition: all 0.3s ease;
 }
 
-/* 统一悬停效果 */
+/* 统悬停效果 */
 .contact-wrapper:hover,
 .linkedin-link:hover {
     transform: translateY(-5px);
@@ -1211,7 +1209,7 @@ img.lazy.loaded {
     font-size: 2.2rem;
 }
 
-/* 响应式调整 */
+/* 应式调整 */
 @media (max-width: 768px) {
     .about-content p {
         font-size: 1rem;
@@ -1608,7 +1606,7 @@ p {
     transition: opacity 0.3s ease;
 }
 
-/* 创建一个元素来存储原始文本 */
+/* 创建一个元素来存原始文本 */
 .big-text p::before {
     content: attr(data-text);
     position: absolute;
@@ -2165,7 +2163,7 @@ p {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 80%; /* 分割线宽度 */
+    width: 100%; /* 分割线宽度 */
     height: 1px;
     background-color: #fff; /* 白色分割线 */
     opacity: 0.3; /* 稍微降低透明度使其看起不那么刺眼 */
@@ -2252,7 +2250,7 @@ p {
 
 .header-scrolled .nav ul li a {
     font-size: 1rem; /* 滚动后字变小 */
-    padding: 0.3rem 0.8rem; /* 滚动后更小的内边距 */
+    padding: 0.3rem 0.8rem; /* 滚动后更小内边距 */
 }
 
 /* Feature 卡片样式 */
@@ -2327,8 +2325,8 @@ p {
     position: absolute;
     animation: floatShape 60s linear infinite;
     will-change: transform;
-    /* 增强阴影效果 */
-    filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.05));
+    filter: blur(10px); /* 添加模糊效果 */
+    filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.05)); /* 增强阴影效果 */
 }
 
 /* 圆形 */
@@ -2483,31 +2481,11 @@ p {
     text-shadow: 0 2px 4px rgba(242, 100, 33, 0.1);
 }
 
-/* Logo Section Styles */
-.logo-section {
-    background-color: #fff;
-    padding: 2rem 0;  /* 从 4rem 减少到 2rem */
-    text-align: center;
-}
-
+/* 添加 footer logo 样式 */
 .footer-logo {
-    max-width: 300px;
-    margin: 0 auto;
-}
-
-.footer-logo img {
-    width: 100%;
+    display: block;
+    width: 300px; /* 增大宽度从120px到180px */
     height: auto;
-    object-fit: contain;
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
-    .logo-section {
-        padding: 1.5rem 0;  /* 从 3rem 减少到 1.5rem */
-    }
-    
-    .footer-logo {
-        max-width: 200px;
-    }
+    margin: 0 auto; /* 删除上下间距，只保留左右自动居中 */
+    filter: brightness(0) invert(1); /* 将图片转换为白色 */
 }

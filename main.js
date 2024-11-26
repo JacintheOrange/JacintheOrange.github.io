@@ -8,19 +8,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     console.log('RoughNotation 已加载');
 
-    // Hero 动画初始化
-    initHeroAnimation();
-
-    // 地图初始化
-    initMap();
-
+    // 初始化所有动画
     console.log('初始化所有动画');
     initHeroAnimation();
     initAboutAnimation();
     initStatAnimation();
-    init3DParallax();
     initHeaderScroll();
     initBackgroundAnimation();
+    initSectionAnimations();
+    initSmoothScroll();
 });
 
 function initHeroAnimation() {
@@ -139,55 +135,6 @@ function initStatAnimation() {
     statNumbers.forEach(number => observer.observe(number));
 }
 
-function init3DParallax() {
-    const hero = document.querySelector('.hero');
-    const background = document.querySelector('.hero-background');
-    const content = document.querySelector('.hero-content');
-    let isScrolling = false;
-    let mouseMoving = false;
-
-    // 滚动视差效果
-    window.addEventListener('scroll', () => {
-        if (!isScrolling) {
-            requestAnimationFrame(() => {
-                const scrolled = window.pageYOffset;
-                const parallaxRate = scrolled * 0.5;
-                
-                background.style.transform = `translateZ(-10px) scale(2) translateY(${parallaxRate * 0.5}px)`;
-                content.style.transform = `translateZ(0) translateY(${50 + parallaxRate * 0.2}px)`;
-                
-                isScrolling = false;
-            });
-        }
-        isScrolling = true;
-    });
-
-    // 鼠标移动效果
-    hero.addEventListener('mousemove', (e) => {
-        if (!mouseMoving) {
-            requestAnimationFrame(() => {
-                const { clientX, clientY } = e;
-                const xRate = (clientX - window.innerWidth / 2) * 0.005;
-                const yRate = (clientY - window.innerHeight / 2) * 0.005;
-
-                background.style.transform = `translateZ(-10px) scale(2) translate(${xRate * 2}px, ${yRate * 2}px)`;
-                content.style.transform = `translateZ(0) translate(${xRate}px, ${50 + yRate}px)`;
-
-                mouseMoving = false;
-            });
-        }
-        mouseMoving = true;
-    });
-
-    // 鼠标离开时重置位置
-    hero.addEventListener('mouseleave', () => {
-        requestAnimationFrame(() => {
-            background.style.transform = 'translateZ(-10px) scale(2)';
-            content.style.transform = 'translateZ(0) translateY(50px)';
-        });
-    });
-}
-
 // 添加导航栏滚动效果
 function initHeaderScroll() {
     const header = document.querySelector('.header');
@@ -202,23 +149,57 @@ function initHeaderScroll() {
     });
 }
 
+function initSmoothScroll() {
+    // 获取所有导航链接
+    const navLinks = document.querySelectorAll('.nav a');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault(); // 阻止默认跳转
+            
+            // 获取目标部分的id（去掉#号）
+            const targetId = this.getAttribute('href').substring(1);
+            const targetSection = document.getElementById(targetId);
+            
+            if (targetSection) {
+                // 平滑滚动到目标位置
+                targetSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
 function initBackgroundAnimation() {
     const container = document.createElement('div');
     container.className = 'animated-background';
     document.body.appendChild(container);
 
-    // 修改颜色配置，右上角改为深蓝色
     const colors = [
-        `rgba(46, 49, 146, 0.18)`,      // 主蓝色
-        `rgba(39, 40, 99, 0.18)`,       // 深蓝色 - 右上角圆形
-        `rgba(30, 117, 188, 0.18)`      // 浅蓝色
+        `rgba(46, 49, 146, 0.5)`,      // 主蓝色
+        `rgba(39, 40, 99, 0.4)`,       // 深蓝色
+        `rgba(30, 117, 188, 0.45)`      // 浅蓝色
     ];
 
-    // 位置配置保持不变
+    const sizes = [
+        { width: '900px', height: '900px' },
+        { width: '450px', height: '450px' },
+        { width: '450px', height: '450px' }
+    ];
+
     const positions = [
-        { left: '-15%', top: '40%' },       // 左边圆形
-        { left: '75%', top: '-15%' },       // 右上角圆形
-        { left: '85%', top: '85%' }         // 右下角方形
+        { left: '-20%', top: '40%' },
+        { left: '75%', top: '-15%' },
+        { left: '85%', top: '85%' }
+    ];
+
+    // 为每个形状设置不同的动画时长和延迟
+    const animations = [
+        { duration: '60s', delay: '0s' },    // 左边圆形
+        { duration: '45s', delay: '-10s' },  // 右上角圆形
+        { duration: '50s', delay: '-20s' }   // 右下角方形
     ];
 
     // 创建形状
@@ -231,14 +212,16 @@ function initBackgroundAnimation() {
         const isCircle = index < 2;
         
         shape.className = `bg-shape ${isCircle ? 'circle' : 'square'}`;
-        shape.style.width = '450px';
-        shape.style.height = '450px';
+        shape.style.width = sizes[index].width;
+        shape.style.height = sizes[index].height;
         shape.style.background = colors[index];
         shape.style.left = positions[index].left;
         shape.style.top = positions[index].top;
         
-        const duration = 60 + index * 5;
-        shape.style.animationDuration = `${duration}s`;
+        // 设置动画
+        shape.style.animationDuration = animations[index].duration;
+        shape.style.animationDelay = animations[index].delay;
+        shape.style.animationTimingFunction = 'ease-in-out';
         
         container.appendChild(shape);
     }
@@ -420,3 +403,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // 延迟初始化地图，避免与其他动画冲突
     setTimeout(initMap, 1000);
 });
+
+function initSectionAnimations() {
+    console.log('开始初始化区域动画');
+    const sections = document.querySelectorAll('.services, .audience-section');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                console.log('区域进入视图:', entry.target.className);
+                entry.target.classList.add('animate');
+            }
+        });
+    }, {
+        threshold: 0.2,
+        rootMargin: '-50px'
+    });
+
+    sections.forEach(section => {
+        observer.observe(section);
+        console.log('观察区域:', section.className);
+    });
+}
