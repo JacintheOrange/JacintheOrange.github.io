@@ -21,6 +21,8 @@
 body {
     font-family: 'Roboto', sans-serif;
     line-height: 1.6;
+    padding-top: 0;
+    background: transparent;
 }
 
 .container {
@@ -29,6 +31,7 @@ body {
     margin: 0 auto;
     padding: 0 20px;
     position: relative;
+    z-index: 1;
 }
 
 /* Container结构优化 */
@@ -45,10 +48,11 @@ section {
     padding: 100px 0;
     position: relative;
     overflow: hidden;
+    background: rgba(255, 255, 255, 0.85);
 }
 
 section:nth-child(even) {
-    background-color: #f9f9f9;
+    background: rgba(249, 249, 249, 0.85);
 }
 
 /* 响应式container调整 */
@@ -75,31 +79,88 @@ section:nth-child(even) {
 /* Header Styles */
 .header {
     position: fixed;
-    width: 100%;
     top: 0;
     left: 0;
-    background: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 0.5rem 0;
     transition: all 0.3s ease;
-    z-index: 1000;
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    height: 80px;
+    backdrop-filter: blur(10px);
 }
 
-.header.scrolled {
+/* 滚动时的样式 */
+.header-scrolled {
+    padding: 0.3rem 0;
     height: 60px;
-    background: rgba(255, 255, 255, 0.95);
+}
+
+/* Logo 大小变化 */
+.logo img {
+    height: 40px; /* 原始 logo 大小 */
+    transition: height 0.3s ease;
+}
+
+.header-scrolled .logo img {
+    height: 35px; /* 缩小后的 logo 大小 */
+}
+
+/* 导航链接样式 */
+.nav a {
+    color: var(--primary-color); /* 使用主色调 */
+    font-size: 22px; /* 保持初始大字体 */
+    transition: all 0.3s ease;
+    font-weight: 500; /* 可以加粗一点 */
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .header {
+        padding: 15px 0;
+    }
+    
+    .header-scrolled {
+        padding: 5px 0;
+    }
+    
+    .logo img {
+        height: 40px;
+    }
+    
+    .header-scrolled .logo img {
+        height: 35px;
+    }
+    
+    .nav a {
+        font-size: 18px; /* 移动端初始字体 */
+    }
+    
+    .header-scrolled .nav a {
+        font-size: 12px; /* 移动端滚动后字体 */
+    }
 }
 
 .header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 80px;
+    height: 100%;
     padding: 0 20px;
     transition: all 0.3s ease;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
 }
 
 .header.scrolled .container {
-    height: 60px;
+    height: 100%;
+}
+
+.header.scrolled .nav a {
+    font-size: 1.1rem;
+    padding: 8px 16px;
 }
 
 .logo {
@@ -108,19 +169,37 @@ section:nth-child(even) {
     color: var(--primary-color);
 }
 
+.nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
 .nav ul {
     display: flex;
     list-style: none;
-    gap: 2rem;
+    gap: 3rem;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    position: relative;
 }
 
 .nav a {
     text-decoration: none;
     color: var(--primary-color);
     font-weight: 500;
-    transition: color 0.3s ease;
-    padding: 8px 16px;
+    font-size: 1.2rem;
+    padding: 12px 20px;
     position: relative;
+    display: inline-block;
+    line-height: 1;
+    text-align: center;
+    transition: all 0.3s ease;
+    transform-origin: center center;
 }
 
 .nav a:hover {
@@ -144,53 +223,85 @@ section:nth-child(even) {
 
 /* Hero Section */
 .hero {
-    margin-top: 80px;
-    min-height: calc(100vh - 80px);
-    background-color: #f5f5f5;
-    display: flex;
-    align-items: center;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     position: relative;
-    background-image: url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') !important;
+    height: 100vh;
+    overflow: hidden;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    background-color: rgba(255, 255, 255, 0.9) !important;
 }
 
-.hero::before {
-    content: '';
+.hero .container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 3;
+}
+
+.hero-background {
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.3); /* 将透明度从0.5改为0.3，使背景更明亮 */
+    width: 100%;
+    height: 100%;
+    background-image: url('images/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    transform: translateZ(-10px) scale(2);
     z-index: 1;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.3)
+    );
+    z-index: 2;
 }
 
 .hero-content {
     text-align: center;
-    position: relative;
-    z-index: 2;
-    color: white; /* 确保文字在深色背景上可见 */
+    max-width: 800px;
+    padding: 0 20px;
+    transform: translateY(50px);
+    transition: transform 0.3s ease-out;
 }
 
+/* 确保内容可读性 */
 .hero h1 {
-    color: var(--primary-color);
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1.5rem;
+    font-size: var(--h1-size);
+    color: white;
+}
+
+.hero p {
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    margin-bottom: 2rem;
+    font-size: var(--body-size);
+    color: white;
 }
 
 .cta-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    margin-top: 1rem;
     background-color: var(--accent-1);
     color: white;
     border: none;
-    padding: 1rem 2rem;
     border-radius: 5px;
     font-size: 1.1rem;
     cursor: pointer;
     transition: all 0.3s ease;
     text-decoration: none;
-    display: inline-block;
     position: relative;
 }
 
@@ -227,58 +338,68 @@ section:nth-child(even) {
     }
 }
 
-/* About Section样式优化 */
+/* About Section 基础样式 */
 .about {
-    padding: 6rem 0;
-    background-color: #fff;
-}
-
-.about-header {
-    text-align: center;
-    margin-bottom: 4rem;
-}
-
-.about-header h2 {
-    font-size: var(--h2-size);
-    color: var(--primary-color);
     position: relative;
-    padding-bottom: 1.5rem;
-    margin-bottom: 0;
+    background: #fff;
+    padding: 100px 0;
+    background-color: rgba(249, 249, 249, 0.85) !important;
 }
 
-.about-header h2::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 3px;
-    background: var(--accent-1);
+.about-wrapper {
+    display: flex;
+    gap: 4rem;
+    align-items: center;
+    margin-top: 3rem;
 }
 
 .about-content {
-    max-width: 900px;
-    margin: 0 auto 4rem;
-    padding: 0 1rem;
+    flex: 1;
 }
 
-.about-text {
-    font-size: 1.1rem;
-    line-height: 1.8;
+.about-image {
+    flex: 1;
 }
 
-.about-text .highlight {
-    font-size: 1.3rem;
+.about h2 {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
     color: var(--primary-color);
-    font-weight: 500;
+    text-align: center;
     margin-bottom: 2rem;
-    line-height: 1.6;
 }
 
-.about-text p {
+.about-content p {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.8s ease;
     margin-bottom: 1.5rem;
-    color: #444;
+    color: var(--secondary-color);
+    font-size: var(--body-size);
+}
+
+/* 动画类 */
+.about h2.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.about-content p.animate {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .about-wrapper {
+        flex-direction: column;
+        gap: 2rem;
+    }
+    
+    .about-image {
+        order: -1;
+    }
 }
 
 /* Stats Section样式优化 */
@@ -298,8 +419,8 @@ section:nth-child(even) {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 1100px;
+    margin: 3rem auto;
     padding: 0 2rem;
 }
 
@@ -307,52 +428,35 @@ section:nth-child(even) {
     text-align: center;
     padding: 2rem;
     background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-}
-
-.stat-item:hover {
-    transform: translateY(-5px);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
 .stat-item h3 {
     font-size: 2.5rem;
     color: var(--accent-1);
-    margin-bottom: 0.5rem;
-    font-weight: 700;
-    position: relative;
-    overflow: hidden;
+    margin: 1rem 0;
+    font-weight: bold;
 }
 
-.stat-item h3::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: -100%;
-    width: 100%;
-    height: 2px;
-    background: var(--accent-1);
-    animation: wave 2s infinite;
+.stat-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-@keyframes wave {
-    0% { left: -100%; }
-    50% { left: 100%; }
-    100% { left: 100%; }
-}
-
-.stat-item p {
-    color: var(--primary-color);
-    font-size: 1rem;
-    font-weight: 500;
-    margin: 0;
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
 }
 
 /* 响应式调整 */
-@media (max-width: 1200px) {
+@media (max-width: 992px) {
     .team-stats {
         grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        padding: 0 1rem;
     }
 }
 
@@ -367,7 +471,6 @@ section:nth-child(even) {
     
     .team-stats {
         grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
     }
     
     .stat-item h3 {
@@ -385,6 +488,7 @@ section:nth-child(even) {
 .services {
     padding: 5rem 0;
     background-color: #f9f9f9;
+    background-color: rgba(249, 249, 249, 0.85) !important;
 }
 
 .services .container {
@@ -535,90 +639,56 @@ section:nth-child(even) {
     padding: 5rem 0;
 }
 
-.audience-page {
-    margin-bottom: 4rem;
+.panel-coverage {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--container-padding);
+    position: relative;  /* 如果有定位需求 */
 }
 
-.audience-types {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    margin-top: 2rem;
-}
-
-.audience-type {
-    background-color: var(--secondary-color);
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 5px;
-    margin: 1rem;
-}
-
-/* Contact Section */
-.contact {
-    padding: 5rem 0;
-    background-color: #fff;
-    color: var(--accent-1);
-}
-
-.contact h2 {
-    color: var(--accent-1);
-}
-
-.contact h2::after {
-    background: var(--accent-1);
-}
-
-.contact-info {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    margin: 3rem auto;
-    max-width: 1000px;
-}
-
-.contact-item {
+.panel-title {
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    height: 100%;
-    transition: all 0.3s ease;
+    margin-bottom: 2rem;
 }
 
-.contact-item:hover {
-    transform: translateY(-3px);
+.panel-title h2 {
+    font-size: var(--h2-size);
+    line-height: 1.4;
+    margin-bottom: 1.5rem;
 }
 
-.contact-icon {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 0.5rem;
-    stroke: var(--accent-1);
+.panel-title h2 .line1,
+.panel-title h2 .line2 {
+    display: block;
 }
 
-.contact-item p {
-    margin: 0;
-    font-size: 1.1rem;
-    color: var(--accent-1);
+.panel-coverage p {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+    color: var(--secondary-color);
 }
 
-/* Responsive Design */
-@media (max-width: 992px) {
-    .contact-info {
-        grid-template-columns: 1fr;
-        max-width: 600px;
+/* 如果有地图相关的样式，也需要更新类名 */
+.panel-coverage .map-container {
+    /* 地图容器样式 */
+}
+
+/* 响应样式 */
+@media (max-width: 768px) {
+    .panel-coverage {
+        padding: 0 20px;
     }
-    
-    .contact-item {
-        margin-bottom: 2rem;
+
+    .panel-title h2 {
+        font-size: calc(var(--h2-size) * 0.9);
     }
 }
 
-/* Logo样式 */
+/* Logo式 */
 .logo img {
-    height: 40px;
+    height: 60px;
     width: auto;
     transition: all 0.3s ease;
 }
@@ -664,6 +734,7 @@ img.lazy.loaded {
 .features {
     padding: 4rem 0;
     background-color: #f9f9f9;
+    background-color: rgba(249, 249, 249, 0.85) !important;
 }
 
 .features-container {
@@ -686,6 +757,11 @@ img.lazy.loaded {
 .big-text {
     text-align: right;
     padding-right: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    min-height: 400px;
 }
 
 .big-text p {
@@ -705,7 +781,7 @@ img.lazy.loaded {
 .big-text p:nth-child(4) { animation-delay: 0.3s; }
 .big-text p:nth-child(5) { animation-delay: 0.4s; }
 
-/* 修改滑入动画 */
+/* 修改滑入画 */
 @keyframes slideIn {
     0% {
         opacity: 0;
@@ -788,18 +864,21 @@ img.lazy.loaded {
 }
 
 .feature-item {
-    background: var(--primary-color);
+    background: white;
     padding: 2rem;
     border-radius: 15px;
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
+    align-items: center;
+    text-align: center;
     position: relative;
+    min-height: 200px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
+/* 添加径向渐变背景 */
 .feature-item::before {
     content: '';
     position: absolute;
@@ -807,33 +886,37 @@ img.lazy.loaded {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent);
-    opacity: 0;
+    background: radial-gradient(
+        circle at center,
+        rgba(46, 49, 146, 0.1) 0%,    /* 使用primary-color的RGB值 */
+        rgba(46, 49, 146, 0.05) 50%,
+        rgba(46, 49, 146, 0.02) 100%
+    );
+    opacity: 0.7;
     transition: opacity 0.3s ease;
+    z-index: 1;
 }
 
-.feature-item:hover {
-    transform: translateY(-5px);
-}
-
+/* 悬停效果 */
 .feature-item:hover::before {
     opacity: 1;
 }
 
-.feature-icon {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 1.5rem;
-    stroke: white;
+/* 确内容在渐变上层 */
+.feature-pattern {
+    position: relative;
+    z-index: 2;
 }
 
 .feature-item p {
+    position: relative;
+    z-index: 2;
     margin: 0;
     font-size: 1.1rem;
-    color: white;
+    color: var(--primary-color);
     line-height: 1.4;
-    position: relative;
-    z-index: 1;
+    padding: 0 1rem;
+    font-weight: 500;
 }
 
 .feature-item:nth-child(1) { animation-delay: 0.1s; }
@@ -883,7 +966,7 @@ img.lazy.loaded {
     }
 }
 
-/* 移动端单按钮 */
+/* 移端单按钮 */
 .mobile-menu-btn {
     display: none;
     flex-direction: column;
@@ -904,7 +987,7 @@ img.lazy.loaded {
     transition: all 0.3s ease;
 }
 
-/* 移动端菜单展开时的样式 */
+/* 移动端菜单展时的样式 */
 .nav.active {
     transform: translateX(0);
 }
@@ -936,7 +1019,7 @@ img.lazy.loaded {
         transform: translateX(0);
     }
 
-    /* 汉堡菜单动画 */
+    /* 汉堡菜单动 */
     .mobile-menu-btn.active span:first-child {
         transform: rotate(45deg) translate(5px, 5px);
     }
@@ -952,69 +1035,120 @@ img.lazy.loaded {
 
 /* Footer Styles */
 .footer {
-    background-color: #1a1a1a;
+    background-color: var(--primary-color);
     color: #fff;
     padding: 4rem 0 0;
+    position: relative;
+    z-index: 1;
 }
 
 .footer-content {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
+    grid-template-columns: 1fr 2fr; /* 服务列表占1份，联系信息占2份 */
+    gap: 4rem;
+    padding: 3rem 0;
 }
 
+/* 服务列表样式 */
 .footer-section h3 {
     color: var(--accent-1);
     margin-bottom: 1.5rem;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
+    font-weight: 500;
 }
 
 .footer-section ul {
     list-style: none;
     padding: 0;
+    margin: 0.5rem 0;
 }
 
 .footer-section ul li {
-    margin-bottom: 0.8rem;
-}
-
-.footer-section ul li a {
     color: #fff;
-    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.15rem 0;
     transition: color 0.3s ease;
 }
 
-.footer-section ul li a:hover {
+.footer-section:first-child ul li {
+    cursor: default;
+}
+
+/* 联系信息新布局 */
+.footer-contact-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 1rem; /* 添加上边距，为标题腾出空间 */
+}
+
+.contact-section h3 {
+    text-align: center; /* 让标题居中对齐 */
+    margin-bottom: 1.5rem; /* 增加标题与邮箱图标的间距 */
+}
+
+/* 调整邮箱图标的位置 */
+.footer-contact-item .contact-wrapper {
+    margin-top: 0; /* 重置顶部边距 */
+}
+
+.footer-contact-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contact-wrapper,
+.linkedin-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+/* 统一悬停效果 */
+.contact-wrapper:hover,
+.linkedin-link:hover {
+    transform: translateY(-5px);
+}
+
+.contact-wrapper:hover .contact-icon,
+.linkedin-link:hover .contact-icon {
+    stroke: var(--accent-1);
+}
+
+.contact-wrapper:hover p,
+.contact-wrapper:hover a,
+.linkedin-link:hover p {
     color: var(--accent-1);
 }
 
-.contact-list li {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+/* 图标样式 */
+.contact-icon {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 1rem;
+    stroke: currentColor;
+    transition: stroke 0.3s ease;
 }
 
-.footer-bottom {
-    border-top: 1px solid #333;
-    padding: 1.5rem 0;
-    text-align: center;
-    margin-top: 2rem;
+/* 文字样式 */
+.footer-contact-item p,
+.footer-contact-item a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    margin: 0;
+    transition: color 0.3s ease;
+    max-width: 200px; /* 控制文字宽度 */
 }
 
-.footer-bottom p {
-    color: #888;
-    font-size: 0.9rem;
-}
-
+/* 响应式调整 */
 @media (max-width: 768px) {
-    .footer-content {
+    .footer-contact-info {
         grid-template-columns: 1fr;
-        text-align: center;
-    }
-
-    .contact-list li {
-        justify-content: center;
+        gap: 2rem;
     }
 }
 
@@ -1120,7 +1254,7 @@ p {
     margin-bottom: 1.5rem;
 }
 
-/* 添加文字动画 */
+/* 添加文字动 */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -1305,7 +1439,7 @@ p {
     }
 }
 
-/* 加LinkedIn链接样式 */
+/* LinkedIn链接样式 */
 .linkedin-link {
     text-decoration: none;
     color: var(--accent-1);
@@ -1334,6 +1468,7 @@ p {
 .highlight-word {
     position: relative;
     display: inline-block;
+    z-index: 1;
 }
 
 /* 添加滚动渐入动画 */
@@ -1437,7 +1572,7 @@ p {
     transition: opacity 0.3s ease;
 }
 
-/* 创建一个伪元素来存储原始文本 */
+/* 创建一个元素来存储原始文本 */
 .big-text p::before {
     content: attr(data-text);
     position: absolute;
@@ -1449,7 +1584,7 @@ p {
     transition: opacity 0.3s ease;
 }
 
-/* 当鼠标悬停时，原始文本消失，伪元素显示 */
+/* 当鼠标悬停时，始文本消失，伪元素显示 */
 .big-text p:hover {
     opacity: 0;
 }
@@ -1474,4 +1609,840 @@ p {
     .big-text p {
         font-size: 2.5rem;
     }
+}
+
+/* 滚动时的文字大小 */
+.header.scrolled .nav a {
+    font-size: 1.1rem;
+    padding: 8px 16px;
+    transform-origin: center center;
+}
+
+/* 统计图标样式 */
+.stat-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 1rem;
+    stroke: var(--accent-1);
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover .stat-icon {
+    transform: none;
+}
+
+/* 调整统计项的布局 */
+.stat-item {
+    text-align: center;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.stat-item::before {
+    display: none;
+}
+
+.stat-item:hover {
+    transform: none;
+}
+
+.stat-item h3 {
+    font-size: 2.5rem;
+    color: var(--accent-1);
+    margin: 0.5rem 0;
+    font-weight: 700;
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 8px;
+    width: 100%;
+}
+
+.stat-item h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: var(--accent-1);
+    animation: wave 2s infinite;
+}
+
+.stat-item p {
+    color: var(--accent-1);
+    font-size: 1.1rem;
+    margin: 0;
+    margin-top: 0.5rem;
+    font-weight: 600;
+}
+
+/* About 区域新样式 */
+.about-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin: 3rem auto;
+    max-width: 1100px;
+    align-items: center;
+    padding: 0 2rem;
+}
+
+.about-content {
+    max-width: 100%;
+    margin: 0;
+    padding-right: 1rem;
+}
+
+.about-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    color: #444;
+    max-width: 450px;
+    margin-left: auto;
+}
+
+.about-image {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    height: 400px;
+}
+
+.about-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+/* 响应式调整 */
+@media (max-width: 992px) {
+    .about-wrapper {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 0 1rem;
+    }
+    
+    .about-content {
+        padding-right: 0;
+    }
+    
+    .about-content p {
+        margin: 0 auto 1.5rem;
+        text-align: center;
+    }
+    
+    .about-image {
+        margin: 0 auto;
+    }
+}
+
+/* Feature 项样式更新 */
+.feature-item {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+/* 背景图��伪元素 */
+.feature-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.2;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+/* 为不同卡片设置不同背景图 */
+.feature-item:nth-child(1)::before {
+    background-image: url('../image/interview1.png');
+}
+
+.feature-item:nth-child(2)::before {
+    background-image: url('../image/interview2.png');
+}
+
+.feature-item:nth-child(3)::before {
+    background-image: url('../image/interview3.png');
+}
+
+.feature-item:nth-child(4)::before {
+    background-image: url('../image/interview4.png');
+}
+
+/* 悬浮效果 */
+.feature-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.feature-item:hover::before {
+    opacity: 0.3;
+}
+
+/* About 区域动样式 */
+.about h2 {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+}
+
+.about-content p {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.8s ease;
+}
+
+.about h2.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.about-content p.animate {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* 为每个段落添加递增的延迟 */
+.about-content p:nth-child(1) { transition-delay: 0.2s; }
+.about-content p:nth-child(2) { transition-delay: 0.4s; }
+
+/* 使用更具体的选择器来确保样式优先级 */
+.hero-content h1 .highlight-word {
+    color: inherit !important; /* 使用 !important 确保覆盖他样式 */
+}
+
+/* 或者使用更具体的路径 */
+#hero .hero-content h1 .highlight-word {
+    color: inherit;
+}
+
+/* Services 卡基础样式 */
+.service-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* 卡片内容样式 */
+.service-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: 500;
+    position: relative;
+    z-index: 2;
+}
+
+/* 列表样式 - 使用更具体的选择器 */
+.service-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.service-card ul li {
+    margin: 10px 0;
+    padding-left: 20px;
+    position: relative;
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+/* 列表项小点 - 确保高优先级 */
+.service-card ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--accent-1);
+}
+
+/* 悬浮果 */
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* 特性卡片基础样式 */
+.feature-item {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+/* 悬浮效果 */
+.feature-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* 卡片内容样式 */
+.feature-item p {
+    position: absolute; /* 绝对定位以实现居中 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%; /* 控制文字宽度 */
+    text-align: center;
+    z-index: 2;
+}
+
+/* 添加小圆点 */
+.feature-item p::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--accent-1);
+}
+
+/* 网格布局 */
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-top: 3rem;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 响应式样式 */
+@media (max-width: 1200px) {
+    .feature-grid {
+        gap: 20px;
+    }
+    
+    .team-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .audience-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .team-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .audience-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .feature-item {
+        padding: 1.5rem;
+    }
+    
+    .stat-item {
+        padding: 1.5rem;
+    }
+    
+    .stat-item h3 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .feature-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .team-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .audience-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .feature-item {
+        padding: 1.25rem;
+    }
+    
+    .stat-item {
+        padding: 1.25rem;
+    }
+    
+    .stat-item h3 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .team-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .feature-item {
+        padding: 1rem;
+    }
+    
+    .stat-item {
+        padding: 1rem;
+    }
+    
+    .stat-item h3 {
+        font-size: 1.6rem;
+    }
+}
+
+/* Services 标题区域样式 */
+.services-title {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+/* 主标题分行显示 */
+.services-title h2 {
+    font-size: var(--h2-size);
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+}
+
+.services-title h2 .line1,
+.services-title h2 .line2 {
+    display: block;  /* 强制换行 */
+}
+
+/* 副标题居中 */
+.services-title p {
+    text-align: center;
+    max-width: 800px;  /* 控制文字宽度 */
+    margin: 0 auto;    /* 水平居中 */
+    line-height: 1.6;
+    color: var(--secondary-color);
+    font-size: var(--body-size);
+}
+
+/* Audience 标题区域样式 */
+.audience-title {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+/* 主标题分行显示 */
+.audience-title h2 {
+    font-size: var(--h2-size);
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+}
+
+.audience-title h2 .line1,
+.audience-title h2 .line2 {
+    display: block;  /* 强制换行 */
+}
+
+/* 整个区域的基础样式 */
+.audience-section {
+    padding: 100px 0;
+    background: #f8f9fa;
+    background-color: rgba(249, 249, 249, 0.85) !important;
+}
+
+/* Healthcare Audience 部分 */
+.healthcare-audience {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--container-padding);
+    margin-bottom: 120px;  /* 增加底部间距，原来是 80px */
+}
+
+/* Panel Coverage 部分 */
+.panel-coverage {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--container-padding);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .healthcare-audience {
+        margin-bottom: 80px;  /* 移动端可以适当减小间距 */
+    }
+}
+
+/* Footer 底部版权信息样式更新 */
+.footer-bottom {
+    position: relative;
+    text-align: center;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    margin-top: 2rem; /* 增加与上方内容的间距 */
+}
+
+/* 添加分割线 */
+.footer-bottom::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%; /* 分割线宽度 */
+    height: 1px;
+    background-color: #fff; /* 白色分割线 */
+    opacity: 0.3; /* 稍微降低透明度使其看起不那么刺眼 */
+}
+
+/* 版权信息文字样式 */
+.footer-bottom p {
+    color: #fff;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Features 标题文字颜色 */
+.features-title .big-text p {
+    color: var(--primary-color); /* 修改为主题蓝色 */
+}
+
+/* Feature 项目文字颜色 */
+.feature-item p {
+    color: #000 !important; /* 使用 !important 确保样式生效 */
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.4;
+    padding: 0 1rem;
+    font-weight: 500;
+}
+
+/* Services 标题样式 */
+.services-title h2 {
+    color: var(--primary-color); /* 标题修改为主题蓝色 */
+}
+
+.services-title p {
+    color: #000; /* 正文修改为黑色 */
+}
+
+/* Audience 标题文字颜色 */
+.audience-title h2 {
+    color: var(--primary-color); /* 修改为主题蓝色 */
+}
+
+/* Panel 标题文字颜色 */
+.panel-title h2 {
+    color: var(--primary-color); /* 修改为主题蓝色 */
+}
+
+/* 确保标题的 span 也继承颜色 */
+.services-title h2 span,
+.audience-title h2 span,
+.panel-title h2 span {
+    color: inherit;
+}
+
+/* Services 区域样式 */
+.services-title p {
+    color: #000 !important; /* 使用 !important 确保样式生效 */
+    font-size: var(--body-size);
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Panel Coverage 区域样式 */
+.panel-coverage p {
+    color: #000 !important; /* 使用 !important 确保样式生效 */
+    font-size: var(--body-size);
+    line-height: 1.6;
+}
+
+/* 导航栏初始状态 */
+.nav ul li a {
+    font-size: 1.2rem; /* 初始文字调大 */
+    padding: 0.8rem 1rem; /* 滚动后更小的链接内边距 */
+    transition: all 0.3s ease;
+}
+
+/* 导航栏滚动后状态 */
+.header-scrolled {
+    height: 60px; /* 减小滚动后的高度 */
+}
+
+.header-scrolled .nav ul li a {
+    font-size: 1rem; /* 滚动后字变小 */
+    padding: 0.3rem 0.8rem; /* 滚动后更小的内边距 */
+}
+
+/* Feature 卡片样式 */
+.feature-pattern {
+    opacity: 0.15; /* 降低背景图片透明度 */
+}
+
+.feature-item p {
+    position: absolute; /* 绝对定位以实现居中 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%; /* 控制文字宽度 */
+    text-align: center;
+    z-index: 2;
+}
+
+/* 调整地址图标的位置 */
+.footer-contact-item:first-child .contact-wrapper {
+    padding-top: 20px; /* 向下移动整个包装器 */
+}
+
+/* 或者只移动图标 */
+.footer-contact-item:first-child .contact-icon {
+    margin-top: 20px; /* 只移动图标 */
+}
+
+/* 调整地址文字的样式 */
+.footer-contact-item:first-child p {
+    margin-top: 1rem; /* 确保文字和图标之间的间距一致 */
+    max-width: 250px; /* 控制地址文字的宽度 */
+    line-height: 1.4; /* 调整行高使文字更紧凑 */
+}
+
+/* 邮箱链接样式 */
+.footer-contact-item a.contact-wrapper {
+    text-decoration: none;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.footer-contact-item a.contact-wrapper:hover {
+    transform: translateY(-5px);
+    color: var(--accent-1);
+}
+
+.footer-contact-item a.contact-wrapper:hover .contact-icon {
+    stroke: var(--accent-1);
+}
+
+/* 邮箱文字样式 */
+.footer-contact-item a.contact-wrapper span {
+    display: block;
+    margin-top: 1rem;
+    font-size: 1rem;
+}
+
+/* 背景动画容器 */
+.animated-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: -1; /* 确保始终在最底层 */
+}
+
+/* 形状基础样式 */
+.bg-shape {
+    position: absolute;
+    animation: floatShape 60s linear infinite;
+    will-change: transform;
+    /* 增强阴影效果 */
+    filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.05));
+}
+
+/* 圆形 */
+.bg-shape.circle {
+    border-radius: 50%;
+}
+
+/* 方形 */
+.bg-shape.square {
+    border-radius: 30px;
+    transform: rotate(45deg);
+}
+
+/* 减小动画幅度，使图形更稳定 */
+@keyframes floatShape {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    33% {
+        transform: translate(15px, -15px) rotate(20deg);
+    }
+    66% {
+        transform: translate(-15px, 15px) rotate(-20deg);
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+/* 确保层级关系正确 */
+.header {
+    position: fixed;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.hero,
+.about,
+.services,
+.features,
+.audience-section {
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.90); /* 进一步降低不透明度 */
+}
+
+/* 特性卡片样式调整 */
+.feature-grid .feature-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+/* 背景图片样式 */
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.9;  /* 增加图片不透明度 */
+    z-index: 0;
+}
+
+/* 内容遮罩层 */
+.feature-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.7),  /* 降低顶部遮罩透明度 */
+        rgba(255, 255, 255, 0.5)   /* 降低底部遮罩透明度 */
+    );
+    z-index: 1;
+}
+
+/* 卡片内容 */
+.feature-card .content {
+    position: relative;
+    z-index: 2;
+    padding: 24px;  /* 增加内边距 */
+}
+
+/* 确保文字清晰可见 */
+.feature-card h3,
+.feature-card p {
+    color: #333;  /* 使用深色文字 */
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);  /* 添加文字���影提高可读性 */
+}
+
+/* 标题文字 */
+.feature-card h3 {
+    font-size: 1.5rem;  /* 增加标题大小 */
+    margin-bottom: 12px;  /* 增加与描述文字的间距 */
+    color: #333;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* 描述文字 */
+.feature-card p {
+    font-size: 1.1rem;  /* 增加描述文字大小 */
+    line-height: 1.6;   /* 增加行高提高可读性 */
+    color: #333;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* Contact Us 标题样式优化 */
+.contact-section h3 {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+    color: var(--accent-1); /* 使用强调色 */
+    font-size: 1.8rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding-bottom: 12px;
+    transition: all 0.3s ease;
+}
+
+/* 添加下划线装饰 */
+.contact-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: var(--accent-1);
+    transition: width 0.3s ease;
+}
+
+/* 悬停效果 */
+.contact-section h3:hover {
+    transform: translateY(-2px);
+}
+
+.contact-section h3:hover::after {
+    width: 80px;
+}
+
+/* 添加微妙的文字阴影 */
+.contact-section h3 {
+    text-shadow: 0 2px 4px rgba(242, 100, 33, 0.1);
 }
